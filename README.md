@@ -43,7 +43,7 @@ The primary "seed data" is the initial number of parking slots (N) provided by t
 * **Total Number of Slots (N):** A positive integer to define the parking lot capacity.
     * **Example Seed Value:** `N = 3` (Creates 1 Small, 1 Large, 1 Oversize slot).
 
-### Test Data (Example Scenario for Verification)
+### Test Data
 
 Follow these steps to test the application's core functionalities:
 
