@@ -41,186 +41,65 @@ This project implements a **Parking Lot Management System** in Java. It simulate
 ````bash
 javac ParkingLotApp.java
 java ParkingLotApp
-
+````
 
 ## Include test data and seed data as required
 
 ### Seed Data
 
-For this application, the primary "seed data" is the initial configuration of the parking lot itself, provided at the start of the application:
+The primary "seed data" is the initial number of parking slots (N) provided by the user at application startup.
 
-* **Total Number of Slots (N):** This is the only "seed" input required from the user to initialize the parking lot.
-
-    * **Example Seed Value:** `N = 3` (This will typically create 1 Small, 1 Large, and 1 Oversize slot based on the current application logic).
-
-    * You can choose any positive integer for `N`. A value divisible by 3 (like 3, 6, 9, 12) will ensure an even distribution.
+* **Total Number of Slots (N):** A positive integer to define the parking lot capacity.
+    * **Example Seed Value:** `N = 3` (Creates 1 Small, 1 Large, 1 Oversize slot).
 
 ### Test Data (Example Scenario for Verification)
 
-The "Test Data" consists of the sequence of user inputs and the expected outputs/behaviors to verify that the application's features work as intended.
+Follow these steps to test the application's core functionalities:
 
-**Scenario: Basic Parking Lot Operations and Report Generation**
+**Scenario: Basic Parking Lot Operations**
 
-**Initial Setup (Seed Data):**
-
+**Initial Setup:**
 * Start the application: `java ParkingLotApp`
-
-* When prompted: `Enter the total number of parking slots (N):`
-
-    * **Input:** `3`
+* Input `3` for total slots.
 
 **Test Steps & Expected Outcomes:**
 
-**Step 1: Park a Small Vehicle**
+1.  **Park Small Vehicle (ABC-111):**
+    * **Action:** Select `1` (Park), `1` (SMALL), Enter `ABC-111`.
+    * **Expected:** `Vehicle ABC-111 parked in Slot ID: 1 (Size: SMALL)`
 
-* **Action:** Select option `1` (Park Vehicle)
+2.  **Park Large Vehicle (DEF-222):**
+    * **Action:** Select `1` (Park), `2` (LARGE), Enter `DEF-222`.
+    * **Expected:** `Vehicle DEF-222 parked in Slot ID: 2 (Size: LARGE)`
 
-* **Action:** Select vehicle size `1` (SMALL)
+3.  **Attempt to Park another Small Vehicle:**
+    * **Action:** Select `1` (Park), `1` (SMALL).
+    * **Expected:** `No space available for SMALL vehicles.`
 
-* **Action:** Enter license plate `ABC-111`
+4.  **Park Oversize Vehicle (GHI-333):**
+    * **Action:** Select `1` (Park), `3` (OVERSIZE), Enter `GHI-333`.
+    * **Expected:** `Vehicle GHI-333 parked in Slot ID: 3 (Size: OVERSIZE)`
 
-* **Expected Output:** `Vehicle ABC-111 parked in Slot ID: 1 (Size: SMALL)`
+5.  **Display Status:**
+    * **Action:** Select `3` (Display Status).
+    * **Expected:** All slots show as `OCCUPIED` by `ABC-111`, `DEF-222`, `GHI-333` respectively.
 
-* **Action:** Press Enter to continue.
+6.  **Unpark Vehicle (DEF-222):**
+    * **Action:** Select `2` (Unpark), Enter `DEF-222`.
+    * **Expected:** `Vehicle DEF-222 unparked from Slot ID: 2`
 
-**Step 2: Park a Large Vehicle**
+7.  **Attempt to Unpark Non-Existent Vehicle:**
+    * **Action:** Select `2` (Unpark), Enter `XYZ-999`.
+    * **Expected:** `No vehicle found with that license plate.`
 
-* **Action:** Select option `1` (Park Vehicle)
+8.  **Display Status (After Unparking):**
+    * **Action:** Select `3` (Display Status).
+    * **Expected:** Slot 2 (`LARGE`) shows `AVAILABLE`.
 
-* **Action:** Select vehicle size `2` (LARGE)
-
-* *Verification (Internal):* Application checks for available LARGE or OVERSIZE slots.
-
-* **Action:** Enter license plate `DEF-222`
-
-* **Expected Output:** `Vehicle DEF-222 parked in Slot ID: 2 (Size: LARGE)`
-
-* **Action:** Press Enter to continue.
-
-**Step 3: Try to Park another Small Vehicle (No Space Available)**
-
-* **Action:** Select option `1` (Park Vehicle)
-
-* **Action:** Select vehicle size `1` (SMALL)
-
-* *Verification (Internal):* Application checks for available SMALL, LARGE, or OVERSIZE slots that can accommodate a SMALL vehicle. Slot 1 (SMALL) is occupied, Slot 2 (LARGE) is occupied. Only Slot 3 (OVERSIZE) is available, but the `isSlotAvailableFor` logic will correctly return `false` if `N/3` logic filled specific types.
-
-* **Expected Output:** `No space available for SMALL vehicles.`
-
-* **Action:** Press Enter to continue.
-
-**Step 4: Park an Oversize Vehicle**
-
-* **Action:** Select option `1` (Park Vehicle)
-
-* **Action:** Select vehicle size `3` (OVERSIZE)
-
-* *Verification (Internal):* Application checks for available OVERSIZE slots. Slot 3 is available.
-
-* **Action:** Enter license plate `GHI-333`
-
-* **Expected Output:** `Vehicle GHI-333 parked in Slot ID: 3 (Size: OVERSIZE)`
-
-* **Action:** Press Enter to continue.
-
-**Step 5: Display Current Parking Status**
-
-* **Action:** Select option `3` (Display Parking Status)
-
-* **Expected Output:**
-
-    ```
-    --- Parking Lot Status ---
-    Available Slots:
-      Small: 0
-      Large: 0
-      Oversize: 0
-    --------------------------
-    Slot ID: 1, Size: SMALL, Status: OCCUPIED by ABC-111
-    Slot ID: 2, Size: LARGE, Status: OCCUPIED by DEF-222
-    Slot ID: 3, Size: OVERSIZE, Status: OCCUPIED by GHI-333
-    --------------------------
-    ```
-
-* **Action:** Press Enter to continue.
-
-**Step 6: Unpark a Vehicle**
-
-* **Action:** Select option `2` (Unpark Vehicle)
-
-* **Action:** Enter license plate `DEF-222`
-
-* **Expected Output:** `Vehicle DEF-222 unparked from Slot ID: 2`
-
-* **Action:** Press Enter to continue.
-
-**Step 7: Try to Unpark a Non-Existent Vehicle**
-
-* **Action:** Select option `2` (Unpark Vehicle)
-
-* **Action:** Enter license plate `XYZ-999`
-
-* **Expected Output:** `No vehicle found with that license plate.`
-
-* **Action:** Press Enter to continue.
-
-**Step 8: Display Status After Unparking**
-
-* **Action:** Select option `3` (Display Parking Status)
-
-* **Expected Output:**
-
-    ```
-    --- Parking Lot Status ---
-    Available Slots:
-      Small: 0
-      Large: 1  (Slot 2 is now available)
-      Oversize: 0
-    --------------------------
-    Slot ID: 1, Size: SMALL, Status: OCCUPIED by ABC-111
-    Slot ID: 2, Size: LARGE, Status: AVAILABLE
-    Slot ID: 3, Size: OVERSIZE, Status: OCCUPIED by GHI-333
-    --------------------------
-    ```
-
-* **Action:** Press Enter to continue.
-
-**Step 9: Exit Application and Verify Report File**
-
-* **Action:** Select option `4` (Exit)
-
-* **Expected Output:** `Exiting application. Generating report...` and `Parking lot report successfully generated to parking_lot_report_DD-MM-YYYY.txt`
-
-* **Verification:**
-
-    * Locate the `parking_lot_report_DD-MM-YYYY.txt` file (where DD-MM-YYYY is the current date) in the same directory where you ran the Java application.
-
-    * Open the file in a text editor.
-
-    * **Expected Report File Content:**
-
-        ```
-        --- Parking Lot Report ---
-        Report Generated: [Current Date and Time, e.g., 2025-06-26 16:20:58]
-        --------------------------
-        Total Parking Slots: 3
-        Slot Distribution:
-          Small Slots: 1
-          Large Slots: 1
-          Oversize Slots: 1
-        --------------------------
-        Current Slot Status:
-        Slot ID: 1, Size: SMALL, Status: OCCUPIED by ABC-111 (Size: SMALL)
-        Slot ID: 2, Size: LARGE, Status: AVAILABLE
-        Slot ID: 3, Size: OVERSIZE, Status: OCCUPIED by GHI-333 (Size: OVERSIZE)
-        --------------------------
-
-        --- Parking History ---
-          License Plate: ABC-111, Size: SMALL, Parked: [Timestamp], Unparked: N/A (Still Parked)
-          License Plate: DEF-222, Size: LARGE, Parked: [Timestamp], Unparked: [Timestamp]
-          License Plate: GHI-333, Size: OVERSIZE, Parked: [Timestamp], Unparked: N/A (Still Parked)
-        --------------------------
-        ```
-
-        *(Note: `[Timestamp]` will be the actual date and time of the event.)*
-````
+9.  **Exit Application & Verify Report:**
+    * **Action:** Select `4` (Exit).
+    * **Expected:** `parking_lot_report_DD-MM-YYYY.txt` file generated.
+    * **Verification:** Open the file to confirm:
+        * Correct Slot Distribution.
+        * Current Slot Status (Slot 1 `ABC-111`, Slot 2 `AVAILABLE`, Slot 3 `GHI-333`).
+        * **Parking History** includes `ABC-111` (parked), `DEF-222` (parked and unparked), and `GHI-333` (parked).
