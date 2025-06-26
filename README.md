@@ -86,3 +86,7 @@ The application consists of a single Java file, which contains all necessary cla
    ```bash
    javac ParkingLotApp.java
    ```
+
+   ```bash
+   java ParkingLotApp.java
+   ```
