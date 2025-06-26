@@ -1,47 +1,38 @@
 # Parking Lot Management System
 
-## 🚗 Your Approach and Design
+## 🚗 Approach and Design
 
-This project implements a **Parking Lot Management System** in Java. It simulates real-world parking lot functionality through a command-driven interface. The system can handle the following operations:
+### Problem Statement
+The application addresses efficient parking lot management for 'N' customizable slots, divided into Small, Large, and Oversize categories. It handles vehicle entry/exit based on size compatibility and provides real-time status and historical reporting. Data is kept in memory.
 
-- Creating a parking lot
-- Parking a car
-- Leaving a slot
-- Displaying status
-- Querying by car color or registration number
+### Design
+An Object-Oriented approach uses classes like `ParkingLotApp` (main controller), `ParkingLot` (core logic for slots, vehicles, and history), `ParkingSlot` (individual spaces), `Vehicle` (car details), and `ParkingEvent` (to log park/unpark timestamps). `ParkingSize` enum defines sizing and compatibility. Data is stored in `ArrayList`s during runtime.
 
-### Design Highlights:
+## Key files and folders
 
-- **OOP Design**: Encapsulates parking lot, slot, and car logic using classes.
-- **Slot Allocation Strategy**: Assigns the lowest available slot number to incoming cars.
-- **Command Interface**: Accepts input via standard input or file redirection to simulate commands.
+The project is contained within a single file:
 
----
+* `ParkingLotApp.java`: Contains all Java classes (`ParkingLotApp`, `ParkingLot`, `ParkingSlot`, `Vehicle`, `ParkingEvent`, `ParkingSize` enum) for the application.
 
-## 📂 Key Files and Folders
+## Process to run, test, and verify.
 
-- `ParkingLotApp.java`: Main Java class containing:
-  - Parking lot creation logic
-  - Command parsing and dispatching
-  - Slot tracking and car registry
+### Prerequisites
+* Java Development Kit (JDK) 11 or newer.
 
-> Note: The project currently consists of a single file. Refactoring into separate classes (e.g., `ParkingLot`, `Vehicle`, `SlotManager`) can be done for scalability.
+### How to Run
 
----
+1.  **Save:** Save the code as `ParkingLotApp.java`.
+2.  **Compile:** Open a terminal and run `javac ParkingLotApp.java`.
+3.  **Run:** Execute the compiled application with `java ParkingLotApp`.
 
-## 🧪 Process to Run, Test, and Verify
-
-### 🔧 Requirements
-
-- Java Development Kit (JDK) 8 or higher
-- Terminal or Command Prompt
-
-### ▶️ To Compile and Run:
-
-````bash
-javac ParkingLotApp.java
-java ParkingLotApp
-````
+### User Interaction
+The application is command-line based.
+1.  **Initialization:** Enter the total number of slots (N).
+2.  **Menu Options:** Choose to `Park Vehicle`, `Unpark Vehicle`, `Display Parking Status`, or `Exit`.
+    * **Park:** Select vehicle size (1-3); if space is available, enter license plate.
+    * **Unpark:** Checks if cars are parked; if so, enter license plate.
+    * **Status:** Displays current slot occupancy.
+3.  **Exit:** Selecting option `4` generates a `parking_lot_report_DD-MM-YYYY.txt` file and closes the application.
 
 ## Include test data and seed data as required
 
