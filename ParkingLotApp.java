@@ -7,7 +7,7 @@ import java.time.format.DateTimeFormatter;
 import java.util.ArrayList;
 import java.util.List;
 import java.util.Optional;
-import java.util.Scanner; // Added for Optional
+import java.util.Scanner;
 
 // Enum to define the size of parking slots and vehicles
 enum ParkingSize {
@@ -107,13 +107,13 @@ class ParkingEvent {
     private String licensePlate;
     private ParkingSize size;
     private LocalDateTime parkTime;
-    private LocalDateTime unparkTime; // Null if vehicle is still parked
+    private LocalDateTime unparkTime;
 
     public ParkingEvent(String licensePlate, ParkingSize size, LocalDateTime parkTime) {
         this.licensePlate = licensePlate;
         this.size = size;
         this.parkTime = parkTime;
-        this.unparkTime = null; // Initially, vehicle is still parked
+        this.unparkTime = null;
     }
 
     // Getters for report generation
@@ -156,12 +156,12 @@ class ParkingLot {
     private int smallSlotCount;
     private int largeSlotCount;
     private int oversizeSlotCount;
-    private List<ParkingEvent> parkingHistory; // New list to store parking event history
+    private List<ParkingEvent> parkingHistory;
 
     public ParkingLot(int totalSlots) {
         this.totalSlots = totalSlots;
         this.slots = new ArrayList<>();
-        this.parkingHistory = new ArrayList<>(); // Initialize parking history
+        this.parkingHistory = new ArrayList<>();
         initializeSlots();
     }
 
@@ -169,7 +169,7 @@ class ParkingLot {
     private void initializeSlots() {
         smallSlotCount = totalSlots / 3;
         largeSlotCount = totalSlots / 3;
-        oversizeSlotCount = totalSlots - smallSlotCount - largeSlotCount; // Ensures total slots are accounted for
+        oversizeSlotCount = totalSlots - smallSlotCount - largeSlotCount;
 
         // Create Small slots
         for (int i = 0; i < smallSlotCount; i++) {
@@ -195,15 +195,12 @@ class ParkingLot {
     public boolean parkVehicle(Vehicle vehicle) {
         for (ParkingSlot slot : slots) {
             if (slot.occupy(vehicle)) {
-                // Record the parking event
                 parkingHistory.add(new ParkingEvent(vehicle.getLicensePlate(), vehicle.getSize(), LocalDateTime.now()));
                 System.out.println("");
                 System.out.println("Vehicle " + vehicle.getLicensePlate() + " parked in Slot ID: " + slot.getSlotId() + " (Size: " + slot.getSize() + ")");
                 return true;
             }
         }
-        // This line might not be reached if isSlotAvailableFor check is done before.
-        // Keeping it for robustness, but the primary message will be from the main method.
         System.out.println("No suitable parking slot found internally for vehicle " + vehicle.getLicensePlate() + " (Size: " + vehicle.getSize() + ").");
         return false;
     }
@@ -212,7 +209,6 @@ class ParkingLot {
     public boolean unparkVehicle(String licensePlate) {
         for (ParkingSlot slot : slots) {
             if (slot.isOccupied() && slot.getParkedVehicle().getLicensePlate().equalsIgnoreCase(licensePlate)) {
-                // Find the corresponding parking event that is still active (unparkTime is null)
                 Optional<ParkingEvent> eventToUpdate = parkingHistory.stream()
                     .filter(e -> e.getLicensePlate().equalsIgnoreCase(licensePlate) && e.getUnparkTime() == null)
                     .findFirst();
@@ -258,11 +254,7 @@ class ParkingLot {
         return false;
     }
 
-    /**
-     * Checks if there is at least one available parking slot that can accommodate the given vehicle size.
-     * @param vehicleSize The size of the vehicle to check for.
-     * @return true if an available slot is found, false otherwise.
-     */
+    // Method to check if there is any slot available for a given vehicle size
     public boolean isSlotAvailableFor(ParkingSize vehicleSize) {
         for (ParkingSlot slot : slots) {
             if (!slot.isOccupied() && slot.getSize().canAccommodate(vehicleSize)) {
@@ -310,7 +302,6 @@ public class ParkingLotApp {
         System.out.println("Welcome to the Parking Lot Management Application!");
         System.out.println("");
 
-        // Initialize parking lot
         while (parkingLot == null) {
             System.out.print("Enter the total number of parking slots (N): ");
             if (scanner.hasNextInt()) {
@@ -322,7 +313,7 @@ public class ParkingLotApp {
                 }
             } else {
                 System.out.println("Invalid input. Please enter a number.");
-                scanner.next(); // Consume invalid input
+                scanner.next();
             }
         }
 
@@ -338,12 +329,11 @@ public class ParkingLotApp {
 
             if (scanner.hasNextInt()) {
                 choice = scanner.nextInt();
-                scanner.nextLine(); // Consume newline
+                scanner.nextLine();
 
                 switch (choice) {
                     case 1:
                         System.out.println("");
-                        // --- START MODIFIED LOGIC FOR PARKING ---
                         ParkingSize vehicleSize = null;
                         while (vehicleSize == null) {
                             System.out.println("Select vehicle size:");
@@ -354,7 +344,7 @@ public class ParkingLotApp {
                             System.out.print("Enter your choice (1-3): ");
                             if (scanner.hasNextInt()) {
                                 int sizeChoice = scanner.nextInt();
-                                scanner.nextLine(); // Consume newline
+                                scanner.nextLine();
                                 switch (sizeChoice) {
                                     case 1:
                                         vehicleSize = ParkingSize.SMALL;
@@ -370,28 +360,25 @@ public class ParkingLotApp {
                                 }
                             } else {
                                 System.out.println("Invalid input. Please enter a number.");
-                                scanner.next(); // Consume invalid input
+                                scanner.next();
                             }
                         }
 
-                        // Check for availability BEFORE asking for license plate
                         if (!parkingLot.isSlotAvailableFor(vehicleSize)) {
                             System.out.println("No space available for " + vehicleSize + " vehicles.");
                         } else {
-                            // Only ask for license plate if space is available
                             System.out.print("Enter vehicle license plate: ");
                             String licensePlate = scanner.nextLine();
                             parkingLot.parkVehicle(new Vehicle(licensePlate, vehicleSize));
                         }
-                        // --- END MODIFIED LOGIC FOR PARKING ---
                         System.out.println("\nPress Enter to return to menu...");
-                        scanner.nextLine(); // Wait for user to press Enter
+                        scanner.nextLine(); 
                         break;
                     case 2:
                         System.out.println("");
                         System.out.println("Unpark Vehicle");
                         System.out.println("");
-                        if (!parkingLot.hasParkedVehicles()) { // Check if there are any parked vehicles
+                        if (!parkingLot.hasParkedVehicles()) { 
                             System.out.println("No vehicle parked yet.");
                         } else {
                             System.out.print("Enter license plate of vehicle to unpark: ");
@@ -399,28 +386,28 @@ public class ParkingLotApp {
                             parkingLot.unparkVehicle(unparkLicensePlate);
                         }
                         System.out.println("\nPress Enter to return to menu...");
-                        scanner.nextLine(); // Wait for user to press Enter
+                        scanner.nextLine();
                         break;
                     case 3:
                         parkingLot.displayStatus();
                         System.out.println("\nPress Enter to return to menu...");
-                        scanner.nextLine(); // Wait for user to press Enter
+                        scanner.nextLine();
                         break;
                     case 4:
                         System.out.println("Exiting application. Generating report...");
-                        generateReportFile(parkingLot); // Call report generation before exit
+                        generateReportFile(parkingLot);
                         break;
                     default:
                         System.out.println("Invalid choice. Please enter a number between 1 and 4.");
                         System.out.println("\nPress Enter to try again...");
-                        scanner.nextLine(); // Wait for user to press Enter
+                        scanner.nextLine();
                 }
             } else {
                 System.out.println("Invalid input. Please enter a number.");
-                scanner.next(); // Consume invalid input
-                choice = 0; // Set choice to an invalid value to continue loop
+                scanner.next();
+                choice = 0;
                 System.out.println("\nPress Enter to try again...");
-                scanner.nextLine(); // Wait for user to press Enter
+                scanner.nextLine();
             }
 
         } while (choice != 4);
@@ -428,20 +415,12 @@ public class ParkingLotApp {
         scanner.close();
     }
 
-    /**
-     * Generates a report file with the current parking lot data.
-     * The report includes total slots, slot distribution, and status of each slot.
-     * The file name includes the current date (day, month, year).
-     * The file is created in the application's working directory.
-     *
-     * @param parkingLot The ParkingLot instance to generate the report from.
-     */
+    // Generates a report file with the current status of the parking lot
     private static void generateReportFile(ParkingLot parkingLot) {
-        // Get current date and format it for the filename
         LocalDateTime now = LocalDateTime.now();
         DateTimeFormatter formatter = DateTimeFormatter.ofPattern("dd-MM-yyyy");
         String formattedDate = now.format(formatter);
-        String fileName = "parking_lot_report_" + formattedDate + ".txt"; // Filename with date
+        String fileName = "parking_lot_report_" + formattedDate + ".txt";
 
         try (PrintWriter writer = new PrintWriter(new BufferedWriter(new FileWriter(fileName)))) {
             writer.println("--- Parking Lot Report ---");
@@ -462,7 +441,6 @@ public class ParkingLotApp {
             }
             writer.println("--------------------------");
 
-            // New section for previously parked vehicles
             writer.println("\n--- Parking History ---");
             if (parkingLot.getParkingHistory().isEmpty()) {
                 writer.println("No vehicles have been parked yet during this session.");

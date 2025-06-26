@@ -1,92 +1,226 @@
-# Parking Lot Management Application
+# Parking Lot Management System
 
-This is a command-line Java application designed to simulate the management of a small parking lot. It allows users to initialize a parking lot with a custom number of slots, park various vehicle types, unpark them, and generate a comprehensive report of parking activities.
+## 🚗 Your Approach and Design
 
-## 1. Approach and Design
+This project implements a **Parking Lot Management System** in Java. It simulates real-world parking lot functionality through a command-driven interface. The system can handle the following operations:
 
-### Problem Statement
+- Creating a parking lot
+- Parking a car
+- Leaving a slot
+- Displaying status
+- Querying by car color or registration number
 
-The goal was to create a simple, in-memory parking lot management system. Key requirements included:
+### Design Highlights:
 
-- Defining `N` parking slots, configurable by the user.
+- **OOP Design**: Encapsulates parking lot, slot, and car logic using classes.
+- **Slot Allocation Strategy**: Assigns the lowest available slot number to incoming cars.
+- **Command Interface**: Accepts input via standard input or file redirection to simulate commands.
 
-- Categorizing slots into Small, Large, and Oversize.
+---
 
-- Categorizing vehicles into Small, Large, and Oversize.
+## 📂 Key Files and Folders
 
-- Implementing parking logic based on slot and vehicle size compatibility (e.g., a Large slot can accommodate Small or Large vehicles).
+- `ParkingLotApp.java`: Main Java class containing:
+  - Parking lot creation logic
+  - Command parsing and dispatching
+  - Slot tracking and car registry
 
-- Supporting vehicle entry and exit.
+> Note: The project currently consists of a single file. Refactoring into separate classes (e.g., `ParkingLot`, `Vehicle`, `SlotManager`) can be done for scalability.
 
-- Displaying the current status of the parking lot.
+---
 
-- Generating a report file upon application exit, detailing parking lot configuration, current status, and a history of all parking events.
+## 🧪 Process to Run, Test, and Verify
 
-- The application operates purely from the command-line, with all data managed in memory for the duration of the session.
+### 🔧 Requirements
 
-### Design Choices
+- Java Development Kit (JDK) 8 or higher
+- Terminal or Command Prompt
 
-#### Object-Oriented Design (OOD)
+### ▶️ To Compile and Run:
 
-The application follows an Object-Oriented design, breaking down the problem into logical entities:
+````bash
+javac ParkingLotApp.java
+java ParkingLotApp
 
-- **`ParkingSize` (Enum):** Represents the distinct sizes for both parking slots and vehicles (SMALL, LARGE, OVERSIZE). It includes a `canAccommodate` method to define compatibility rules, ensuring correct vehicle placement.
 
-- **`Vehicle` (Class):** Models a car with properties like `licensePlate` (String) and `size` (ParkingSize).
+## Include test data and seed data as required
 
-- **`ParkingSlot` (Class):** Represents an individual parking space. It has a `slotId` (int), `size` (ParkingSize), `isOccupied` (boolean), and a reference to the `parkedVehicle` (Vehicle). Methods like `occupy` and `vacate` manage its state.
+### Seed Data
 
-- **`ParkingEvent` (Class):** A new addition to track the history of parking activities. It records the `licensePlate`, `size` of the vehicle, `parkTime`, and `unparkTime`. `unparkTime` is `null` if the vehicle is still parked.
+For this application, the primary "seed data" is the initial configuration of the parking lot itself, provided at the start of the application:
 
-- **`ParkingLot` (Class):** The central management class. It maintains a `List` of `ParkingSlot` objects and a `List` of `ParkingEvent` objects. It encapsulates the core logic for:
+* **Total Number of Slots (N):** This is the only "seed" input required from the user to initialize the parking lot.
 
-  - Initializing slots with a balanced distribution (1/3 Small, 1/3 Large, remaining Oversize).
+    * **Example Seed Value:** `N = 3` (This will typically create 1 Small, 1 Large, and 1 Oversize slot based on the current application logic).
 
-  - `parkVehicle(Vehicle)`: Finds the first suitable available slot.
+    * You can choose any positive integer for `N`. A value divisible by 3 (like 3, 6, 9, 12) will ensure an even distribution.
 
-  - `unparkVehicle(String licensePlate)`: Locates and vacates a slot based on the license plate, and updates the `ParkingEvent`.
+### Test Data (Example Scenario for Verification)
 
-  - `displayStatus()`: Shows current occupancy and available slots.
+The "Test Data" consists of the sequence of user inputs and the expected outputs/behaviors to verify that the application's features work as intended.
 
-  - `hasParkedVehicles()`: Checks if any vehicle is currently parked.
+**Scenario: Basic Parking Lot Operations and Report Generation**
 
-  - `isSlotAvailableFor(ParkingSize)`: Checks if a slot exists for a given vehicle size.
+**Initial Setup (Seed Data):**
 
-- **`ParkingLotApp` (Main Class):** Contains the `main` method, handling user interaction via a `Scanner`, displaying the menu, and orchestrating calls to the `ParkingLot` instance. It also manages the report generation upon exit.
+* Start the application: `java ParkingLotApp`
 
-#### Data Handling
+* When prompted: `Enter the total number of parking slots (N):`
 
-- **In-Memory Storage:** All application data (`ParkingSlot` states, `Vehicle` objects, and `ParkingEvent` history) is stored in `ArrayList`s, residing in the application's memory. This means data is lost when the application closes, unless explicitly saved to a file.
+    * **Input:** `3`
 
-- **Report Generation:** A `parking_lot_report_DD-MM-YYYY.txt` file is generated upon application exit, providing a snapshot of the parking lot's current status and a comprehensive history of all parking and unparking events during the session.
+**Test Steps & Expected Outcomes:**
 
-## 2. Key Files and Folders
+**Step 1: Park a Small Vehicle**
 
-The application consists of a single Java file, which contains all necessary classes:
+* **Action:** Select option `1` (Park Vehicle)
 
-- `ParkingLotApp.java`: This is the main source file containing the `ParkingLotApp` class (which holds the `main` method), `ParkingLot`, `ParkingSlot`, `Vehicle`, `ParkingEvent`, and `ParkingSize` enum.
+* **Action:** Select vehicle size `1` (SMALL)
 
-## 3. Process to Run, Test, and Verify
+* **Action:** Enter license plate `ABC-111`
 
-### Prerequisites
+* **Expected Output:** `Vehicle ABC-111 parked in Slot ID: 1 (Size: SMALL)`
 
-- Java Development Kit (JDK) 11 or newer installed on your system.
+* **Action:** Press Enter to continue.
 
-### How to Run
+**Step 2: Park a Large Vehicle**
 
-1. **Save the Code:**
-   Save the provided Java code into a file named `ParkingLotApp.java`.
+* **Action:** Select option `1` (Park Vehicle)
 
-2. **Open a Terminal/Command Prompt:**
-   Navigate to the directory where you saved `ParkingLotApp.java`.
+* **Action:** Select vehicle size `2` (LARGE)
 
-3. **Compile the Code:**
-   Use the Java compiler to compile the source file:
+* *Verification (Internal):* Application checks for available LARGE or OVERSIZE slots.
 
-   ```bash
-   javac ParkingLotApp.java
-   ```
+* **Action:** Enter license plate `DEF-222`
 
-   ```bash
-   java ParkingLotApp.java
-   ```
+* **Expected Output:** `Vehicle DEF-222 parked in Slot ID: 2 (Size: LARGE)`
+
+* **Action:** Press Enter to continue.
+
+**Step 3: Try to Park another Small Vehicle (No Space Available)**
+
+* **Action:** Select option `1` (Park Vehicle)
+
+* **Action:** Select vehicle size `1` (SMALL)
+
+* *Verification (Internal):* Application checks for available SMALL, LARGE, or OVERSIZE slots that can accommodate a SMALL vehicle. Slot 1 (SMALL) is occupied, Slot 2 (LARGE) is occupied. Only Slot 3 (OVERSIZE) is available, but the `isSlotAvailableFor` logic will correctly return `false` if `N/3` logic filled specific types.
+
+* **Expected Output:** `No space available for SMALL vehicles.`
+
+* **Action:** Press Enter to continue.
+
+**Step 4: Park an Oversize Vehicle**
+
+* **Action:** Select option `1` (Park Vehicle)
+
+* **Action:** Select vehicle size `3` (OVERSIZE)
+
+* *Verification (Internal):* Application checks for available OVERSIZE slots. Slot 3 is available.
+
+* **Action:** Enter license plate `GHI-333`
+
+* **Expected Output:** `Vehicle GHI-333 parked in Slot ID: 3 (Size: OVERSIZE)`
+
+* **Action:** Press Enter to continue.
+
+**Step 5: Display Current Parking Status**
+
+* **Action:** Select option `3` (Display Parking Status)
+
+* **Expected Output:**
+
+    ```
+    --- Parking Lot Status ---
+    Available Slots:
+      Small: 0
+      Large: 0
+      Oversize: 0
+    --------------------------
+    Slot ID: 1, Size: SMALL, Status: OCCUPIED by ABC-111
+    Slot ID: 2, Size: LARGE, Status: OCCUPIED by DEF-222
+    Slot ID: 3, Size: OVERSIZE, Status: OCCUPIED by GHI-333
+    --------------------------
+    ```
+
+* **Action:** Press Enter to continue.
+
+**Step 6: Unpark a Vehicle**
+
+* **Action:** Select option `2` (Unpark Vehicle)
+
+* **Action:** Enter license plate `DEF-222`
+
+* **Expected Output:** `Vehicle DEF-222 unparked from Slot ID: 2`
+
+* **Action:** Press Enter to continue.
+
+**Step 7: Try to Unpark a Non-Existent Vehicle**
+
+* **Action:** Select option `2` (Unpark Vehicle)
+
+* **Action:** Enter license plate `XYZ-999`
+
+* **Expected Output:** `No vehicle found with that license plate.`
+
+* **Action:** Press Enter to continue.
+
+**Step 8: Display Status After Unparking**
+
+* **Action:** Select option `3` (Display Parking Status)
+
+* **Expected Output:**
+
+    ```
+    --- Parking Lot Status ---
+    Available Slots:
+      Small: 0
+      Large: 1  (Slot 2 is now available)
+      Oversize: 0
+    --------------------------
+    Slot ID: 1, Size: SMALL, Status: OCCUPIED by ABC-111
+    Slot ID: 2, Size: LARGE, Status: AVAILABLE
+    Slot ID: 3, Size: OVERSIZE, Status: OCCUPIED by GHI-333
+    --------------------------
+    ```
+
+* **Action:** Press Enter to continue.
+
+**Step 9: Exit Application and Verify Report File**
+
+* **Action:** Select option `4` (Exit)
+
+* **Expected Output:** `Exiting application. Generating report...` and `Parking lot report successfully generated to parking_lot_report_DD-MM-YYYY.txt`
+
+* **Verification:**
+
+    * Locate the `parking_lot_report_DD-MM-YYYY.txt` file (where DD-MM-YYYY is the current date) in the same directory where you ran the Java application.
+
+    * Open the file in a text editor.
+
+    * **Expected Report File Content:**
+
+        ```
+        --- Parking Lot Report ---
+        Report Generated: [Current Date and Time, e.g., 2025-06-26 16:20:58]
+        --------------------------
+        Total Parking Slots: 3
+        Slot Distribution:
+          Small Slots: 1
+          Large Slots: 1
+          Oversize Slots: 1
+        --------------------------
+        Current Slot Status:
+        Slot ID: 1, Size: SMALL, Status: OCCUPIED by ABC-111 (Size: SMALL)
+        Slot ID: 2, Size: LARGE, Status: AVAILABLE
+        Slot ID: 3, Size: OVERSIZE, Status: OCCUPIED by GHI-333 (Size: OVERSIZE)
+        --------------------------
+
+        --- Parking History ---
+          License Plate: ABC-111, Size: SMALL, Parked: [Timestamp], Unparked: N/A (Still Parked)
+          License Plate: DEF-222, Size: LARGE, Parked: [Timestamp], Unparked: [Timestamp]
+          License Plate: GHI-333, Size: OVERSIZE, Parked: [Timestamp], Unparked: N/A (Still Parked)
+        --------------------------
+        ```
+
+        *(Note: `[Timestamp]` will be the actual date and time of the event.)*
+````
